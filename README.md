@@ -18,7 +18,7 @@ library(coreNLP)
 Or
 
 ```{r}
-source("https://github.com/nolauren/")
+source("http://bit.ly/29nwAcB")
 ```
 
 ```{r}
