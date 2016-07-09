@@ -53,7 +53,7 @@ getToken(annoFrench)$token
 ```
 
 ```{r}
-anno <- readRDS("01_a_scandal_in_bohemia.Rds")
+anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
 anno
 ```
 
@@ -222,7 +222,7 @@ charImport
 output = c()
 outputGraphics = list()
 iter = 1
-for (f in dir(".",full.names=TRUE)) {
+for (f in dir("holmes/",full.names=TRUE)) {
   anno = readRDS(f)
   token = getToken(anno)
   dep = getDependency(anno)
