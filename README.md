@@ -31,10 +31,6 @@ getToken(annotation)$token
 ```
 
 ```{r}
-getToken(annotation)$token
-```
-
-```{r}
 getToken(annotation)$sentence
 ```
 
@@ -71,7 +67,6 @@ token <- getToken(anno)
 token[token$sentence==2,c(1:4,7)]
 ```
 
-
 ```{r}
 ut <- universalTagset(token$POS)
 table(ut)
@@ -90,8 +85,8 @@ head(posDf)
 
 ```{r}
 par(mfrow=c(1,2))
-plot(nounCnt + pronCnt, adjCnt, pch=19, cex=2, col=rgb(0,0,1,0.02))
-plot(nounCnt + pronCnt, verbCnt, pch=19, cex=2, col=rgb(0,0,1,0.02))
+plot(nounCnt + pronCnt, adjCnt, pch=19, cex=1, col=rgb(0,0,1,0.02))
+plot(nounCnt + pronCnt, verbCnt, pch=19, cex=1, col=rgb(0,0,1,0.02))
 ```
 
 ```{r}
@@ -106,9 +101,7 @@ tab <- table(token$lemma[index])
 head(sort(tab,decreasing=TRUE),25)
 ```
 
-
 ## Dependencies
-
 
 ```{r}
 dep <- getDependency(anno)
@@ -132,7 +125,7 @@ nnDep <- dep[index,]
 ```
 
 ```{r}
-pname <- startIndex = endIndex = NULL
+pname <- startIndex <- endIndex <- NULL
 for (g in unique(nnDep$govIndex)) {
   these <- c(which(nnDep$depIndex == g),
             which(nnDep$govIndex == g))
@@ -295,4 +288,21 @@ for (f in dir("holmes/",full.names=TRUE)) {
 output = gsub(" ,", ",", output)
 ```
 
+```{r}
+output
+```
 
+```{r}
+par(mar=c(0,0,0,0))
+par(mfrow=c(1,1))
+plot(0,0,col="white",ylim=c(1,56),xlim=c(0,1),axes=FALSE)
+for (j in 1:length(outputGraphics)) {
+  points(outputGraphics[[j]],rep(57-j,length(outputGraphics[[j]])),
+         pch=19, cex=0.4)
+  abline(h=j)
+}
+rect(-100,-100,0.005,100,bg="white",density=NA,col="white")
+rect(0.995,-100,100,100,bg="white",density=NA,col="white")
+text(-.015,1:56,sprintf("%02d",56:1),cex=0.5)
+box()
+```
