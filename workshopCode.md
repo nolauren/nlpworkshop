@@ -102,18 +102,32 @@ We are already getting a sense of the writing style in the text.
 
 ## Lemmatization and Part of Speech Tagging
 
+Now, look at the lemmatization and part of speech tagging from the second
+sentence in our short story:
 ```{r}
+anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
 token <- getToken(anno)
 token[token$sentence==2,c(1:4,7)]
 ```
 
+### Universal tagset
+
+Converting to the universal tagset, note the distribution of parts of
+speech:
 ```{r}
 ut <- universalTagset(token$POS)
 table(ut)
+```
+See which Penn parts of speech are associated with nouns and verbs:
+```{r}
 unique(token$POS[ut == "NOUN"])
 unique(token$POS[ut == "VERB"])
 ```
 
+### Some data analysis
+
+Now, let's do a bit of data analysis and try to understand the distribution
+of parts of speech within a given sentence
 ```{r}
 nounCnt <- tapply(ut == "NOUN", token$sentence, sum)
 pronCnt <- tapply(ut == "PRON", token$sentence, sum)
@@ -122,32 +136,52 @@ verbCnt <- tapply(ut == "VERB", token$sentence, sum)
 posDf <- data.frame(nounCnt,pronCnt,adjCnt,verbCnt)
 head(posDf)
 ```
-
+Does the second lind of `posDf` match the part of speech codes we saw at the
+top of this section? Let's visualize this now:
 ```{r}
 par(mfrow=c(1,2))
 plot(nounCnt + pronCnt, adjCnt, pch=19, cex=1, col=rgb(0,0,1,0.02))
 plot(nounCnt + pronCnt, verbCnt, pch=19, cex=1, col=rgb(0,0,1,0.02))
 ```
 
+### Most frequent lemmas
+
+Take a look at the most frequntly used Nouns:
 ```{r}
 index <- which(ut=="NOUN")
 tab <- table(token$lemma[index])
 head(sort(tab,decreasing=TRUE),25)
 ```
-
+And verbs:
 ```{r}
 index <- which(token$POS == "NNP")
 tab <- table(token$lemma[index])
 head(sort(tab,decreasing=TRUE),25)
 ```
+Do the results surprise you or reveal anything particular abotu the story?
 
 ## Dependencies
 
+Now, let's re-load our text (just in case it get's modified or deleted for 
+some reason) and extract both the tokens and the dependencies:
 ```{r}
+anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
+token <- getToken(anno)
 dep <- getDependency(anno)
+```
+Now look at the dependencies from the first sentence:
+```{r}
 dep[dep$sentence == 1,]
 ```
+Try to change the `1` to a different sentence. Is the structure of the
+dependencies starting to make some sense?
 
+### Verb usage by gender
+
+An interesting application of dependencies is to see which verbs are
+associated with certain characters. Here is a code snippet that finds
+all dependencies between the pronoun `he` and a verb associated with
+`he`. 
 ```{r}
 index <- which(token$lemma[dep$depIndex] == "he" &
       universalTagset(token$POS[dep$govIndex]) == "VERB")
@@ -155,7 +189,8 @@ depSelf <- dep[index,]
 depSelf <- depSelf[depSelf$type == "nsubj",]
 sort(table(depSelf$governor),decreasing=TRUE)[1:10]
 ```
-
+Take note of all the verbs associated with the male pronoun. Now repeat
+the analysis with the pronoun `she`:
 ```{r}
 index <- which(token$lemma[dep$depIndex] == "she" &
       universalTagset(token$POS[dep$govIndex]) == "VERB")
@@ -163,7 +198,16 @@ depSelf <- dep[index,]
 depSelf <- depSelf[depSelf$type == "nsubj",]
 sort(table(depSelf$governor),decreasing=TRUE)[1:10]
 ```
+How do the verbs associated with female characters seem to differ from the
+male characters? Do you find this surprising?
 
+### Finding compound nouns
+
+Another usage of dependencies is to construct compound nouns from multiple
+words, such as *New York City* and *Sherlock Holmes*. The following code
+snippet finds all dependencies which link two compound, proper nouns 
+(the `toupper` lines are particular to this text to remove several words
+that were transcribed in all capital letters):
 ```{r}
 index <- which(dep$type == "nn" &
           token$POS[dep$govIndex] == "NNP" &
@@ -172,7 +216,14 @@ index <- which(dep$type == "nn" &
           (toupper(token$word) != token$word)[dep$depIndex])
 nnDep <- dep[index,]
 ```
-
+We can look at the `nnDep` object now, but there is still some work to do
+to actually paste the compound nouns together:
+```{r}
+nnDep
+```
+The code to collapse multiple words together is below; the main reason for
+being a bit complicated is because it needs to handle cases, like *New York City*,
+that have more than just 2 words put together:
 ```{r}
 pname <- startIndex <- endIndex <- NULL
 for (g in unique(nnDep$govIndex)) {
@@ -187,11 +238,13 @@ for (g in unique(nnDep$govIndex)) {
 pnames <- data.frame(pname,startIndex,endIndex,
                     stringsAsFactors=FALSE)
 ```
-
+Now looking at the unique compound, proper nouns we get a sense of the
+people and places in the text:
 ```{r}
 unique(pnames$pname)
 ```
-
+Notice that there is a ways to go to creating a complete character list, but
+at least this is a good start!
 
 ## Named Entity Recognition
 
