@@ -12,22 +12,15 @@ strsplit(sIn, split=" ")
 ```
 
 ```{r}
-install.packages("coreNLP")
-library(coreNLP)
-```
-
-Or
-
-```{r}
 source("https://raw.githubusercontent.com/nolauren/nlpworkshop/master/corenlp_funs.R")
 ```
 
 ```{r}
-setwd("Desktop/annotations")
+setwd("~/Desktop/annotations")
 ```
 Or on windows:
 ```{r}
-setwd("desktop/annotations")
+setwd("C:/Users/your_user_name/Desktop/Leada")")
 ```
 
 ```{r}
