@@ -36,7 +36,7 @@ setwd("~/Desktop/annotations")
 ```
 Or on windows:
 ```{r}
-setwd("C:/Users/your_user_name/Desktop/annotations")")
+setwd("C:/Users/your_user_name/Desktop/annotations")
 ```
 With your username filled in in place of `your_user_name`.
 
