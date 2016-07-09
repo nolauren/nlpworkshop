@@ -1,20 +1,36 @@
 
 # An Introduction to Natural Language Processing
 
+These notes accompany the more detailed slides and talk given in the workshop.
+It is highly encouraged but not required to follow along with the code snippets.
+With few exceptions you should be able to simply copy and paste the code boxes
+directly into R, though feel free to experiment with code as we go along!
+
 ## Tokenization
 
+### Simple example
+
+A simple example from the opening lines of Albert Camus's *L’Étranger*:
 ```{r}
 sIn <- "Mother died today. Or, maybe, yesterday; I can't be sure."
 ```
-
+We can do a simple version of tokenization using spaces:
 ```{r}
 strsplit(sIn, split=" ")
 ```
 
+### Loading data and code
+
+Before we apply more sophisticated techniques, we'll load in a set of functions
+into R that help us work with the NLP pipeline. This can be done by the calling
+the following inside of R (internet connection required):
 ```{r}
 source("https://raw.githubusercontent.com/nolauren/nlpworkshop/master/corenlp_funs.R")
 ```
-
+Next, download the zip file containing all of the data in today's workshop:
+[zip file](https://github.com/nolauren/nlpworkshop/raw/master/annotations.zip).
+Unzip the archive and place it on your desktop. Then, on a Mac run the following
+inside R to set the working directory:
 ```{r}
 setwd("~/Desktop/annotations")
 ```
@@ -22,45 +38,67 @@ Or on windows:
 ```{r}
 setwd("C:/Users/your_user_name/Desktop/annotations")")
 ```
+With your username filled in in place of `your_user_name`.
 
+### Simple example again
+
+We'll now look at what we call the *annotation* of the string `sIn`. This is the
+result of applying the entire NLP pipeline to the string of text. At the end of
+the workshop we will show you how to do the annotation yourself, but for now we
+will just load in pre-annotated text in the sake of time:
 ```{r}
 annotation <- readRDS("simple_annotation.Rds")
 annotation
 ```
+Notice the information that is displayed when we print the annotation (objects
+in R are printed when we write the object's name on its own line and hit enter).
 
+To actually see the tokenization from the annotation, we run the following:
 ```{r}
 getToken(annotation)$token
 ```
-
+We can also see how these tokens are split into sentences by this code snippet:
 ```{r}
 getToken(annotation)$sentence
 ```
+We will look at other aspects of annotation objects throughout the workshop.
 
+### Other languages
+
+Now let's take the original French version of *L’Étranger*:
 ```{r}
 strIn <- "Aujourd'hui, maman est morte. Ou peut-être hier, je ne sais pas. J'ai reçu un télégramme de l'asile."
 ```
-
+If we produce a standard English annotation the tokenization does a reasonably
+close approximation, but makes a lot of mistakes:
 ```{r}
 annoEnglish <- readRDS("annoEnglish.Rds")
 getToken(annoEnglish)$token
 ```
-
+It is possible to load a French-specific NLP pipeline that corrects all of these
+issues.
 ```{r}
 annoFrench <- readRDS("annoFrench.Rds")
 getToken(annoFrench)$token
 ```
+At the end when we show how to actually run the annotations, there will be a description of how
+to select the desired language as well.
 
+### A longer application
+
+Now, read in the entire annotation from the Sherlock Holmes' short story
+'A Scandel in Bohemia':
 ```{r}
 anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
 anno
 ```
-
+Notice how many tokens and sentences there are. We can visualize the lengths of
+sentences using a histogram:
 ```{r}
 sentLen <- table(getToken(anno)$sentence)
 hist(sentLen, breaks=30)
 ```
-
-
+We are already getting a sense of the writing style in the text.
 
 ## Lemmatization and Part of Speech Tagging
 
