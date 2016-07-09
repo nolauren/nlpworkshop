@@ -22,6 +22,14 @@ source("https://raw.githubusercontent.com/nolauren/nlpworkshop/master/corenlp_fu
 ```
 
 ```{r}
+setwd("Desktop/annotations")
+```
+Or on windows:
+```{r}
+setwd("desktop/annotations")
+```
+
+```{r}
 annotation <- readRDS("simple_annotation.Rds")
 annotation
 ```
