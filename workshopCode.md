@@ -248,23 +248,45 @@ at least this is a good start!
 
 ## Named Entity Recognition
 
+Now, lets took at the results of `getToken` in more detail. There are a number 
+of columns that we ignored previously that contain the named entity recognition
+information:
 ```{r}
+anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
 token <- getToken(anno)
 table(token$NER)
 ```
+Take note of all the different categories that are supplied. We will look at a 
+few of these today.
 
+### Location
+
+The location NER in this story picks up a number of places that are referenced
+or visited in the story:
 ```{r}
 unique(token$lemma[token$NER=="LOCATION"])
 ```
 
+### Date and time
+
+The date entity recognition can be seen in action in sentence 18, where it converts
+a long form data into a standard ISO-8601 format:
 ```{r}
 token[485:490,]
 ```
-
+And likewise the time entity recognition converts a colloquial description of time
+into a standard format in sentence 435:
 ```{r}
 token[6991:6994,]
 ```
+Note that this process is not perfect. For example, in this time conversion it is
+unclear whether we are referring to 6:15am or 6:15pm.
 
+### Person
+
+In order to detect characters, we can make use of the person named entity tag.
+The following code snippet uses this information to filter out `pnames` list
+of characters to remove proper names that do not appear to be people:
 ```{r}
 these <- which(token$NER == "PERSON")
 pnames <- pnames[which(pnames$endIndex %in% these),]
@@ -277,24 +299,34 @@ pnames <- rbind(pnames,newPnames)
 pnames <- pnames[toupper(pnames$pname) != pnames$pname,]
 unique(pnames$pname)
 ```
+Note that this code block will only run correctly if you ran the code in the previous
+section to construct the original `pnames` dataset.
 
 ## Coreferences
 
+The final step in the NLP pipeline that we will look at today can be extracted by
+using the `getCoreference` function. We read all of the data back in, again just 
+in case something gets modified or deleted:
 ```{r}
+anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
+token <- getToken(anno)
 coref <- getCoreference(anno)
 head(coref)
 ```
-
+Which tokens are associated with `corefId` number 1? 
 ```{r}
-table(token$word[coref$startIndex[coref$corefId == 1]])
+table(token$token[coref$startIndex[coref$corefId == 1]])
 ```
+What character seems to be associated with id 1?
 
+### Mapping ID to Name
+
+To more methodically map `corefId` to a character, we first see which coreferences
+seem to directly map to our table of characters:
 ```{r}
 index <- match(as.numeric(coref$endIndex), pnames$endIndex)
-head(index)
 ```
-
-
+We then create the mapping from ID to character name:
 ```{r}
 temp <- tapply(pnames$pname[index[!is.na(index)]],
               coref[!is.na(index),1],
@@ -303,6 +335,11 @@ perMap <- data.frame(corefId=names(temp),perName=temp)
 perMap
 ```
 
+### Most important characters
+
+We can now combine corefID's that appear to map to the same character (remember,
+coreference resolution is an active field of research and far from perfect). A
+rought count of how often each character is mentioned is then given by:
 ```{r}
 tab <- table(coref[,1])
 index <- match(perMap$corefId, names(tab))
@@ -310,9 +347,19 @@ perMap$count <- tab[index]
 charImport <- sort(tapply(perMap$count, perMap$perName, sum),TRUE)
 charImport
 ```
+This should seem reasonable, but is again far from perfect. Dr. Watson for instance
+is almost certainly under counted, as he also the narrator of the story and should
+be associated with any use of first person pronouns outside of quotes.
 
 ## Sherlock Holmes Short Stories
 
+### Detecting main characters
+
+Let's put all that we have learned today together to extract the most important
+character (other than Sherlock or Dr. Watson) from each the 56 short stories.
+The code chunk to do it is below. Don't be overwhelmed by its complexity; just 
+copy, run, and analyze the results at first. It is really just all of the code
+we have already seen just put into a single block:
 ```{r}
 output = c()
 outputGraphics = list()
@@ -389,11 +436,15 @@ for (f in dir("holmes/",full.names=TRUE)) {
 }
 output = gsub(" ,", ",", output)
 ```
-
+The list of characters is then given by:
 ```{r}
 output
 ```
 
+### Plotting character locations
+
+We can now make a plot of when each of these characters is mentioned in each
+story:
 ```{r}
 par(mar=c(0,0,0,0))
 par(mfrow=c(1,1))
@@ -408,3 +459,74 @@ rect(0.995,-100,100,100,bg="white",density=NA,col="white")
 text(-.015,1:56,sprintf("%02d",56:1),cex=0.5)
 box()
 ```
+How well do these explain the narrative arc of each short story?
+
+## Annotating your own text
+
+### Getting set-up
+
+To annotate text yourself (that is, to apply the NLP pipeline to new text) you
+will need to install the **coreNLP** package that we wrote. This needs to be done
+just once, by running following code in R:
+```{r}
+install.packages('coreNLP')
+```
+Choose a mirror site and the installation should run in less a couple of minutes.
+
+You then need to download the java files from the coreNLP website. This should
+also be done from within R, with the following command:
+```{r}
+coreNLP::downloadCoreNLP()
+```
+The file is about 350MB; this could take a while depending on your internet connection
+speed.
+
+Now, any time you want to annotate text, run the following lines from within R:
+```{r}
+library(coreNLP)
+initCoreNLP()
+```
+As long as the last line spits out a bunch of text that suggests various things are
+being loaded, you are ready to go. If you get an error, please ask or e-mail us directly
+for assistance, or see the discussion on:
+[https://github.com/statsmaths/coreNLP](https://github.com/statsmaths/coreNLP). Problems
+almost always have to do with setting up Java correctly, and are rarely a function of
+issues with the **coreNLP** package directly.
+
+### Running the annotation
+
+Once you have set up the package correctly and loaded and initalized the annotation
+engine:
+```{r}
+library(coreNLP)
+initCoreNLP()
+```
+You can annotate text by using the `annotateString` function:
+```{r}
+sIn <- "Mother died today. Or, maybe, yesterday; I can't be sure."
+anno <- annotateString(sIn)
+anno
+```
+The `anno` object can be used the exact same way the annotation objects we loaded
+directly during the workshop. If you have a lot of text, you can also call `annotateFile`
+and point it directly at a file on our computer.
+
+### Other languages
+
+In order to run the NLP pipeline on other languages, you need to create a text file
+that contains a list of properties that change the default behavior of the annotator.
+For example, if you create a file `french.properties` (in a text editor, not a word
+processor!) with the following:
+```
+annotators = tokenize, ssplit
+tokenize.language = fr
+```
+And then in R run:
+```{r}
+library(coreNLP)
+initCoreNLP(parameterFile="path/to/french.properties")
+```
+Then, subsequent calls to `annotateString` and `annotateFile` should apply the
+French parser to the code. We are working on a way of making this easier in a
+future version of the package.
+
