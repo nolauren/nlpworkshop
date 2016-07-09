@@ -1,5 +1,7 @@
 # An Introduction to Natural Language Processing
 
+## Tokenization
+
 ```{r}
 sIn <- "Mother died today. Or, maybe, yesterday; I can't be sure."
 ```
