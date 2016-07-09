@@ -20,7 +20,7 @@ setwd("~/Desktop/annotations")
 ```
 Or on windows:
 ```{r}
-setwd("C:/Users/your_user_name/Desktop/Leada")")
+setwd("C:/Users/your_user_name/Desktop/annotations")")
 ```
 
 ```{r}
