@@ -109,7 +109,16 @@ dep[dep$sentence == 1,]
 ```
 
 ```{r}
-index <- which(token$lemma[dep$depIndex] == "I")
+index <- which(token$lemma[dep$depIndex] == "he" &
+      universalTagset(token$POS[dep$govIndex]) == "VERB")
+depSelf <- dep[index,]
+depSelf <- depSelf[depSelf$type == "nsubj",]
+sort(table(depSelf$governor),decreasing=TRUE)[1:10]
+```
+
+```{r}
+index <- which(token$lemma[dep$depIndex] == "she" &
+      universalTagset(token$POS[dep$govIndex]) == "VERB")
 depSelf <- dep[index,]
 depSelf <- depSelf[depSelf$type == "nsubj",]
 sort(table(depSelf$governor),decreasing=TRUE)[1:10]
