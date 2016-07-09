@@ -18,7 +18,7 @@ library(coreNLP)
 Or
 
 ```{r}
-source("http://bit.ly/29nwAcB")
+source("https://raw.githubusercontent.com/nolauren/nlpworkshop/master/corenlp_funs.R")
 ```
 
 ```{r}
