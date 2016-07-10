@@ -36,6 +36,7 @@ We now need to set the working directory of R to the annotations directory.
 This can be done through the R command menu by:
   - Macs: go to the Misc menu, select Change Working Directory, and select the appropriate directory
   - Windows: go to the File menu, select Change Working Directory, and select the appropriate adirectory
+  - RStudio: go to Session, go down to Set Working Directory, got Choose Directory, and select
 You can alternatively run the following inside R to set the working directory on a Mac:
 ```{r}
 setwd("~/Desktop/annotations")
