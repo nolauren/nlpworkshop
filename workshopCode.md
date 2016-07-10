@@ -30,8 +30,13 @@ source(paste0("https://raw.githubusercontent.com",
 ```
 Next, download the zip file containing all of the data in today's workshop:
 [zip file](https://github.com/nolauren/nlpworkshop/raw/master/annotations.zip).
-Unzip the archive and place it on your desktop. Then, on a Mac run the following
-inside R to set the working directory:
+Unzip the archive and place it on your desktop.
+
+We now need to set the working directory of R to the annotations directory.
+This can be done through the R command menu by:
+  - Macs: go to the Misc menu, select Change Working Directory, and select the appropriate directory
+  - Windows: go to the File menu, select Change Working Directory, and select the appropriate adirectory
+You can alternatively run the following inside R to set the working directory on a Mac:
 ```{r}
 setwd("~/Desktop/annotations")
 ```
