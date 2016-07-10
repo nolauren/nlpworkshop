@@ -25,7 +25,8 @@ Before we apply more sophisticated techniques, we'll load in a set of functions
 into R that help us work with the NLP pipeline. This can be done by the calling
 the following inside of R (internet connection required):
 ```{r}
-source("https://raw.githubusercontent.com/nolauren/nlpworkshop/master/corenlp_funs.R")
+source(paste0("https://raw.githubusercontent.com",
+              "/nolauren/nlpworkshop/master/corenlp_funs.R"))
 ```
 Next, download the zip file containing all of the data in today's workshop:
 [zip file](https://github.com/nolauren/nlpworkshop/raw/master/annotations.zip).
