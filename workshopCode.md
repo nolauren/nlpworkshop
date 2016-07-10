@@ -351,12 +351,80 @@ This should seem reasonable, but is again far from perfect. Dr. Watson for insta
 is almost certainly under counted, as he also the narrator of the story and should
 be associated with any use of first person pronouns outside of quotes.
 
+## Generalize to other stories (time permitting)
+
+We have up to now only looked at one of the Sherlock Holmes short stories. How would
+our analysis of the NLP pipeline look different with another one of the stories? We
+can evaluate this by replacing the code snippet `anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")`,
+with any of the following:
+```{r}
+anno <- readRDS("holmes/01_a_scandal_in_bohemia.Rds")
+anno <- readRDS("holmes/02_the_red_headed_league.Rds")
+anno <- readRDS("holmes/03_a_case_of_identity.Rds")
+anno <- readRDS("holmes/04_the_boscombe_valley_mystery.Rds")
+anno <- readRDS("holmes/05_the_five_orange_pips.Rds")
+anno <- readRDS("holmes/06_the_man_with_the_twisted_lip.Rds")
+anno <- readRDS("holmes/07_the_blue_carbuncle.Rds")
+anno <- readRDS("holmes/08_the_speckled_band.Rds")
+anno <- readRDS("holmes/09_the_engineers_thumb.Rds")
+anno <- readRDS("holmes/10_the_noble_bachelor.Rds")
+anno <- readRDS("holmes/11_the_beryl_coronet.Rds")
+anno <- readRDS("holmes/12_the_copper_beeches.Rds")
+anno <- readRDS("holmes/13_silver_blaze.Rds")
+anno <- readRDS("holmes/14_the_yellow_face.Rds")
+anno <- readRDS("holmes/15_the_stock_brokers_clerk.Rds")
+anno <- readRDS("holmes/16_the_gloria_scott.Rds")
+anno <- readRDS("holmes/17_the_musgrave_ritual.Rds")
+anno <- readRDS("holmes/18_the_reigate_puzzle.Rds")
+anno <- readRDS("holmes/19_the_crooked_man.Rds")
+anno <- readRDS("holmes/20_the_resident_patient.Rds")
+anno <- readRDS("holmes/21_the_greek_interpreter.Rds")
+anno <- readRDS("holmes/22_the_naval_treaty.Rds")
+anno <- readRDS("holmes/23_the_final_problem.Rds")
+anno <- readRDS("holmes/24_the_empty_house.Rds")
+anno <- readRDS("holmes/25_the_norwood_builder.Rds")
+anno <- readRDS("holmes/26_the_dancing_men.Rds")
+anno <- readRDS("holmes/27_the_solitary_cyclist.Rds")
+anno <- readRDS("holmes/28_the_priory_school.Rds")
+anno <- readRDS("holmes/29_black_peter.Rds")
+anno <- readRDS("holmes/30_charles_augustus_milverton.Rds")
+anno <- readRDS("holmes/31_the_six_napoleons.Rds")
+anno <- readRDS("holmes/32_the_three_students.Rds")
+anno <- readRDS("holmes/33_the_golden_pince_nez.Rds")
+anno <- readRDS("holmes/34_the_missing_three_quarter.Rds")
+anno <- readRDS("holmes/35_the_abbey_grange.Rds")
+anno <- readRDS("holmes/36_the_second_stain.Rds")
+anno <- readRDS("holmes/37_the cardboard box.Rds")
+anno <- readRDS("holmes/38_wisteria lodge.Rds")
+anno <- readRDS("holmes/39_the bruce-partington.Rds")
+anno <- readRDS("holmes/40_the devils foot.Rds")
+anno <- readRDS("holmes/41_the red circle.Rds")
+anno <- readRDS("holmes/42_the disappearance of lady frances.Rds")
+anno <- readRDS("holmes/43_the dying.Rds")
+anno <- readRDS("holmes/44_his last bow.Rds")
+anno <- readRDS("holmes/45_the_illustrious_client.Rds")
+anno <- readRDS("holmes/46_the_blanched_soldier.Rds")
+anno <- readRDS("holmes/47_the_mazarin_stone.Rds")
+anno <- readRDS("holmes/48_the_three_gables.Rds")
+anno <- readRDS("holmes/49_the_sussex_vampire.Rds")
+anno <- readRDS("holmes/50_the_three_garridebs.Rds")
+anno <- readRDS("holmes/51_the_problem_of_thor_bridge.Rds")
+anno <- readRDS("holmes/52_the_creeping_man.Rds")
+anno <- readRDS("holmes/53_the_lion's_mane.Rds")
+anno <- readRDS("holmes/54_the_veiled_lodger.Rds")
+anno <- readRDS("holmes/55_shoscombe_old_place.Rds")
+anno <- readRDS("holmes/56_the_retired_colourman.Rds")
+```
+Pick a new story and rerun all of the analysis that we have done. How well
+does our code do on picking up interesting features of this new story? Are
+there any news errors that crop up? 
+
 ## Sherlock Holmes Short Stories
 
 ### Detecting main characters
 
 Let's put all that we have learned today together to extract the most important
-character (other than Sherlock or Dr. Watson) from each the 56 short stories.
+character (other than Sherlock or Dr. Watson) from all the 56 short stories.
 The code chunk to do it is below. Don't be overwhelmed by its complexity; just 
 copy, run, and analyze the results at first. It is really just all of the code
 we have already seen just put into a single block:
