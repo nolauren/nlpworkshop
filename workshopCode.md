@@ -213,8 +213,8 @@ that were transcribed in all capital letters):
 index <- which(dep$type == "nn" &
           token$POS[dep$govIndex] == "NNP" &
           token$POS[dep$depIndex] == "NNP" &
-          (toupper(token$word) != token$word)[dep$govIndex] &
-          (toupper(token$word) != token$word)[dep$depIndex])
+          (toupper(token$token) != token$token)[dep$govIndex] &
+          (toupper(token$token) != token$token)[dep$depIndex])
 nnDep <- dep[index,]
 ```
 We can look at the `nnDep` object now, but there is still some work to do
@@ -231,7 +231,7 @@ for (g in unique(nnDep$govIndex)) {
   these <- c(which(nnDep$depIndex == g),
             which(nnDep$govIndex == g))
   these <- range(c(nnDep$depIndex[these],nnDep$govIndex[these]))
-  out <- paste(token$word[these[1]:these[2]],collapse=" ")
+  out <- paste(token$token[these[1]:these[2]],collapse=" ")
   pname <- c(pname, out)
   startIndex <- c(startIndex, these[1])
   endIndex <- c(endIndex, these[2])
@@ -289,7 +289,7 @@ of characters to remove proper names that do not appear to be people:
 these <- which(token$NER == "PERSON")
 pnames <- pnames[which(pnames$endIndex %in% these),]
 these <- these[-which(these %in% pnames$endIndex)]
-newPnames <- data.frame(pname=token$word[these],
+newPnames <- data.frame(pname=token$token[these],
                   startIndex=these,
                   endIndex=these,
                   stringsAsFactors=FALSE)
@@ -313,7 +313,7 @@ head(coref)
 ```
 Which tokens are associated with `corefId` number 1? 
 ```{r}
-table(token$word[coref$startIndex[coref$corefId == 1]])
+table(token$token[coref$startIndex[coref$corefId == 1]])
 ```
 We can alternatively look at the set of lemmas associated with this id:
 ```{r}
@@ -444,8 +444,8 @@ for (f in dir("holmes/",full.names=TRUE)) {
   index = which(dep$type == "nn" &
             token$POS[dep$govIndex] == "NNP" &
             token$POS[dep$depIndex] == "NNP" &
-            (toupper(token$word) != token$word)[dep$govIndex] &
-            (toupper(token$word) != token$word)[dep$depIndex])
+            (toupper(token$token) != token$token)[dep$govIndex] &
+            (toupper(token$token) != token$token)[dep$depIndex])
   nnDep = dep[index,]
 
   pname = startIndex = endIndex = NULL
@@ -454,7 +454,7 @@ for (f in dir("holmes/",full.names=TRUE)) {
               which(nnDep$govIndex == g))
     these = range(c(nnDep$depIndex[these],nnDep$govIndex[these]))
     index = these[1]:these[2]
-    words = token$word[index][token$POS[index] != "." &
+    words = token$token[index][token$POS[index] != "." &
                               token$NER[index] %in% c("O","PERSON")]
     out = paste(words,collapse=" ")
     pname = c(pname, out)
@@ -467,7 +467,7 @@ for (f in dir("holmes/",full.names=TRUE)) {
   these = which(token$NER == "PERSON")
   pnames = pnames[which(pnames$endIndex %in% these),]
   these = these[-which(these %in% pnames$endIndex)]
-  newPnames = data.frame(pname=token$word[these],
+  newPnames = data.frame(pname=token$token[these],
                     startIndex=these,
                     endIndex=these,
                     stringsAsFactors=FALSE)
