@@ -315,7 +315,11 @@ head(coref)
 ```
 Which tokens are associated with `corefId` number 1? 
 ```{r}
-table(token$token[coref$startIndex[coref$corefId == 1]])
+table(token$word[coref$startIndex[coref$corefId == 1]])
+```
+We can alternatively look at the set of lemmas associated with this id:
+```{r}
+table(token$lemma[coref$startIndex[coref$corefId == 1]])
 ```
 What character seems to be associated with id 1?
 
