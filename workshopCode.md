@@ -268,17 +268,16 @@ or visited in the story:
 unique(token$lemma[token$NER=="LOCATION"])
 ```
 
-### Date and time
+### Date and numbers
 
 The date entity recognition can be seen in action in sentence 18, where it converts
 a long form data into a standard ISO-8601 format:
 ```{r}
 head(token[which(token$NER=="DATE"),])
 ```
-And likewise the time entity recognition converts a colloquial description of time
-into a standard format in sentence 435:
+And likewise the number entity converts written forms of numbers into numeric values:
 ```{r}
-head(token[which(token$NER=="TIME"),])
+head(token[which(token$NER=="NUMBER"),])
 ```
 
 ### Person
