@@ -159,7 +159,7 @@ index <- which(token$POS == "NNP")
 tab <- table(token$lemma[index])
 head(sort(tab,decreasing=TRUE),25)
 ```
-Do the results surprise you or reveal anything particular abotu the story?
+Do the results surprise you or reveal anything particular about the story?
 
 ## Dependencies
 
