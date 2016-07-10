@@ -273,15 +273,13 @@ unique(token$lemma[token$NER=="LOCATION"])
 The date entity recognition can be seen in action in sentence 18, where it converts
 a long form data into a standard ISO-8601 format:
 ```{r}
-token[485:490,]
+head(token[which(token$NER=="DATE"),])
 ```
 And likewise the time entity recognition converts a colloquial description of time
 into a standard format in sentence 435:
 ```{r}
-token[6991:6994,]
+head(token[which(token$NER=="TIME"),])
 ```
-Note that this process is not perfect. For example, in this time conversion it is
-unclear whether we are referring to 6:15am or 6:15pm.
 
 ### Person
 
